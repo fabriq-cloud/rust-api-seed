@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cargo update
+cargo test --bins --tests --examples
+cargo clippy --all-targets --all-features --workspace --no-deps -- -D warnings
+cargo fmt --all -- --check
+cargo +nightly udeps --all --all-targets
+cargo audit --ignore RUSTSEC-2020-0071

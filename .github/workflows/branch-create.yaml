@@ -1,0 +1,23 @@
+name: Create Deployment for New Branch
+on: create
+jobs:
+  create:
+    if: github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: robinraju/release-downloader@v1.6
+        with:
+          repository: "fabriq-cloud/fabriq"
+          latest: true
+          fileName: "fabriq"
+
+      - name: Delete api and gitops deployment for this branch
+        run: |
+          echo "create deployment for branch ${{ github.event.ref }}"
+
+          chmod +x fabriq
+
+          # FABRIQ_GITHUB_TOKEN is a PAT for a principal that is a member of the team for underlying workload.
+          ./fabriq login ${{ secrets.FABRIQ_GITHUB_TOKEN  }}
+
+          ./fabriq deployment create ${{ github.event.ref }} --target westus3 --team ${{ github.repository }} --workload api --hosts 1
