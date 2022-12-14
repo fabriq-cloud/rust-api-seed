@@ -15,7 +15,7 @@ RUN adduser \
     --uid "${SERVICE_UID}" \
     service
 
-WORKDIR /fabriq
+WORKDIR /app
 
 COPY ./ .
 
