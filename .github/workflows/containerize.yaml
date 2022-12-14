@@ -29,6 +29,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Dump Github context
+        run: |
+          echo $GIT_BRANCH
+          echo "$GITHUB_CONTEXT"
+        shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
 
       # Tool installation
       - uses: actions/checkout@v2
@@ -99,5 +106,5 @@ jobs:
           ./fabriq login ${{ secrets.FABRIQ_GITHUB_TOKEN }}
 
           ./fabriq workload create ${{ github.event.repository.name }} --team ${{ github.repository }} --template external-service
-          ./fabriq deployment create ${{ github.event.ref }} --target westus3 --team ${{ github.repository }} --workload ${{ github.event.repository.name }} --hosts 1
+          ./fabriq deployment create $GIT_BRANCH --target westus3 --team ${{ github.repository }} --workload ${{ github.event.repository.name }} --hosts 1
           ./fabriq config create --deployment ${{ github.repository }}/${{ github.event.repository.name }}/$GIT_BRANCH image ${{ steps.api_meta.outputs.tags }}
