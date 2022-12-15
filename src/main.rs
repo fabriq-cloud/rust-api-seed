@@ -3,10 +3,7 @@ use std::net::SocketAddr;
 
 #[tokio::main]
 async fn main() {
-    // build our application with a route
-    let app = Router::new().route("/", get(root));
-
-    // run it
+    let app = Router::new().route("/health", get(health));
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
     println!("listening on {}", addr);
@@ -17,6 +14,6 @@ async fn main() {
         .unwrap();
 }
 
-async fn root() -> Html<&'static str> {
-    Html("<h1>Hello, World!</h1>")
+async fn health() -> Html<&'static str> {
+    Html("ok")
 }
