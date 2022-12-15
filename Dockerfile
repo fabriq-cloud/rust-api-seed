@@ -15,7 +15,7 @@ RUN adduser \
     --uid "${SERVICE_UID}" \
     service
 
-WORKDIR /fabriq
+WORKDIR /app
 
 COPY ./ .
 
@@ -35,12 +35,6 @@ COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 
 WORKDIR /app
-
-# Install glibc
-# RUN apk --update add libstdc++ curl ca-certificates
-# RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
-# RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk
-# RUN apk add glibc-2.35-r0.apk
 
 # Copy our build
 COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/api /app/api

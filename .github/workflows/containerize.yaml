@@ -29,6 +29,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Dump Github context
+        run: |
+          echo "$GITHUB_CONTEXT"
+        shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
 
       # Tool installation
       - uses: actions/checkout@v2
@@ -64,7 +70,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata and create fabriq-api-{sha} tag
+      - name: Extract metadata and create api-{sha} tag
         id: api_meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
@@ -98,4 +104,6 @@ jobs:
           # FABRIQ_GITHUB_TOKEN is a PAT for a principal that is a member of the team for underlying workload.
           ./fabriq login ${{ secrets.FABRIQ_GITHUB_TOKEN }}
 
-          ./fabriq config create --deployment ${{ github.repository }}/api/$GIT_BRANCH image ${{ steps.api_meta.outputs.tags }}
+          ./fabriq workload create ${{ github.event.repository.name }} --team ${{ github.repository }} --template external-service
+          ./fabriq deployment create $GIT_BRANCH --target westus3 --team ${{ github.repository }} --workload ${{ github.event.repository.name }} --hosts 1
+          ./fabriq config create --deployment ${{ github.repository }}/${{ github.event.repository.name }}/$GIT_BRANCH image ${{ steps.api_meta.outputs.tags }}
