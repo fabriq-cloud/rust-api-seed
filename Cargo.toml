@@ -4,8 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+anyhow = "1.0"
 axum = { version = "0.6" }
+hyper = "0.14"
 tokio = { version = "1.14", features = ["macros", "rt", "rt-multi-thread"] }
+tower = "0.4"
 
 [profile.release]
 lto = true
