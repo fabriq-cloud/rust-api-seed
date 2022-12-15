@@ -104,6 +104,6 @@ jobs:
           # FABRIQ_GITHUB_TOKEN is a PAT for a principal that is a member of the team for underlying workload.
           ./fabriq login ${{ secrets.FABRIQ_GITHUB_TOKEN }}
 
-          ./fabriq workload create ${{ github.event.repository.name }} --team ${{ github.repository }} --template external-service
+          ./fabriq workload create ${{ github.event.repository.name }} --team ${{ github.repository }} --template external-http-service
           ./fabriq deployment create $GIT_BRANCH --target westus3 --team ${{ github.repository }} --workload ${{ github.event.repository.name }} --hosts 1
           ./fabriq config create --deployment ${{ github.repository }}/${{ github.event.repository.name }}/$GIT_BRANCH image ${{ steps.api_meta.outputs.tags }}
